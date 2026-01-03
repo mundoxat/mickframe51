@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Xat Frame</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Kalam&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- MAIN CONTENT -->
+    <div class="frame">
+        <div class="logo-text" id="logoText" data-text="MICK"></div>
+        <div class="sub-text" id="subText" data-text="- 10004 -"></div>
+    </div>
+
+    <!-- AUDIO -->
+   <audio id="bgMusic" src="music.mp3" autoplay loop muted></audio>
+
+    <!-- PLAYER BUTTON -->
+    <div class="player-btn" id="playerBtn">▶</div>
+
+    <!-- SCRIPT -->
+    <script>
+/* ===== TYPING EFFECT ===== */
+function typeText(el, speed, callback) {
+    const text = el.getAttribute("data-text");
+    let i = 0;
+    el.textContent = "";
+    el.style.opacity = 1;
+
+    const interval = setInterval(() => {
+        el.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+            clearInterval(interval);
+            if (callback) callback();
+        }
+    }, speed);
+}
+
+/* ===== DOM READY ===== */
+document.addEventListener("DOMContentLoaded", () => {
+    const audio = document.getElementById("bgMusic");
+    const btn = document.getElementById("playerBtn");
+
+    /* pornește MUT automat */
+    audio.volume = 0.5;
+    audio.play().catch(() => {});
+
+    /* typing */
+    const logo = document.getElementById("logoText");
+    const sub = document.getElementById("subText");
+
+    typeText(logo, 320, () => {
+        setTimeout(() => {
+            typeText(sub, 200);
+        }, 500);
+    });
+
+    /* primul click = UNMUTE */
+    const unlockAudio = () => {
+        audio.muted = false;
+        btn.textContent = "❚❚";
+        btn.classList.add("playing");
+        document.removeEventListener("click", unlockAudio);
+    };
+
+    document.addEventListener("click", unlockAudio);
+});
+
+/* ===== PLAYER BUTTON ===== */
+const btn = document.getElementById("playerBtn");
+const audio = document.getElementById("bgMusic");
+
+btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+
+    if (audio.paused) {
+        audio.muted = false;
+        audio.play();
+        btn.textContent = "❚❚";
+        btn.classList.add("playing");
+    } else {
+        audio.pause();
+        btn.textContent = "▶";
+        btn.classList.remove("playing");
+    }
+});
+</script>
+
+
+</body>
+</html>
